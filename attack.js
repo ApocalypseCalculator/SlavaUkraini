@@ -14,7 +14,7 @@ async function sendReq(link) {
             'User-Agent': userAgent
         }
     }).then(() => {
-        console.log(link);
+        process.send(link);
         sendReq(link);
     }).catch(err => {});
 }

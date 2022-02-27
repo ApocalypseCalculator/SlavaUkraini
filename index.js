@@ -16,7 +16,7 @@ if (argv.workers && !isNaN(argv.workers) && parseInt(argv.workers) > 0) {
 console.log(chalk.cyan('Starting workers...'));
 
 for (let i = 1; i < workerCount + 1; i++) {
-    let spawnedProcess = childProcess.spawn(argv.nodePath ?? 'node', ['attack.js'])
+    let spawnedProcess = childProcess.spawn(argv.nodePath ?? 'node', ['attack.js'], {stdio: ['pipe', 'pipe', 'pipe', 'ipc']});
     spawnedProcess.on('exit', () => {
         console.log(chalk.yellow(`Worker #${i} exited.`));
     })
@@ -26,7 +26,7 @@ for (let i = 1; i < workerCount + 1; i++) {
     spawnedProcess.on('error', () => {
         console.log(chalk.red(`Worker #${i} encountered an error.`));
     })
-    spawnedProcess.stdout.on('data', (data) => {
+    spawnedProcess.on('message', (data) => {
         let site = `${data}`.trim();
         if (counterMap.has(site)) {
             counterMap.set(site, counterMap.get(site) + 1);
@@ -46,10 +46,9 @@ process.stdin.resume();
 
 function exitHandler() {
     //https://stackoverflow.com/a/14032965
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0, 0);
     for(let i = 0; i < workerCount + 2; i++) {
-        process.stdout.write(' '.repeat(50) + '\n');
+        process.stdout.cursorTo(0, i);
+        process.stdout.clearLine();
     }
     process.stdout.cursorTo(0, 0);
     process.stdout.write(chalk.bgBlue(`DDoS Report: \n`));
