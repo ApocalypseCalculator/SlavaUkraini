@@ -27,15 +27,17 @@ for (let i = 1; i < workerCount + 1; i++) {
     })
     spawnedProcess.stdout.on('data', (data) => {
         let site = `${data}`.trim();
-        if(counterMap.has(site)) {
-            counterMap.set(site, counterMap.get(site)+1);
+        if (counterMap.has(site)) {
+            counterMap.set(site, counterMap.get(site) + 1);
         }
         else {
             counterMap.set(site, 1);
         }
-        process.stdout.cursorTo(0, i);
-        process.stdout.clearLine();
-        process.stdout.write(chalk.green(`Worker #${i}: `) + `Hit ${site}`);
+        if (!argv.silent) {
+            process.stdout.cursorTo(0, i);
+            process.stdout.clearLine();
+            process.stdout.write(chalk.green(`Worker #${i}: `) + `Hit ${site}`);
+        }
     })
 }
 
@@ -44,7 +46,8 @@ process.stdin.resume();
 function exitHandler() {
     //https://stackoverflow.com/a/14032965
     process.stdout.clearLine();
-    process.stdout.cursorTo(0, workerCount+2);
+    process.stdout.cursorTo(0, workerCount + 2);
+    process.stdout.write(chalk.bgBlue(`DDoS Report: \n`));
     counterMap.forEach((value, key) => {
         process.stdout.write(chalk.greenBright(`Hit ${key} ${value} times.\n`));
     })
