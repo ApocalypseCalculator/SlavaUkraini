@@ -22,6 +22,7 @@ node .
 Optional arguments: 
 - `workers`: Number of workers to spawn. Default: 10
 - `silent`: This removes the constant updating hit result logs. It will not stop the report or other output from being printed. This may result in increased performance.
+- `nodePath`: Path to the node executable. Use this if node is not in your path. 
 
 Example: 
 ```
