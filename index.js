@@ -16,7 +16,7 @@ if (argv.workers && !isNaN(argv.workers) && parseInt(argv.workers) > 0) {
 console.log(chalk.cyan('Starting workers...'));
 
 for (let i = 1; i < workerCount + 1; i++) {
-    let spawnedProcess = childProcess.fork('attack.js', {stdio: ['pipe', 'pipe', 'pipe', 'ipc']});
+    let spawnedProcess = childProcess.fork('attack.js', { stdio: ['pipe', 'pipe', 'pipe', 'ipc'] });
     spawnedProcess.on('exit', () => {
         console.log(chalk.yellow(`Worker #${i} exited.`));
     })
@@ -46,13 +46,12 @@ process.stdin.resume();
 
 function exitHandler() {
     //https://stackoverflow.com/a/14032965
-    for(let i = 0; i < workerCount + 2; i++) {
+    for (let i = 0; i < workerCount + 2; i++) {
         process.stdout.cursorTo(0, i);
         process.stdout.clearLine();
     }
-    process.stdout.cursorTo(0, 0);
     process.stdout.write(chalk.bgBlue(`DDoS Report: \n`));
-    process.stdout.write(chalk.bgGray(`Time Elapsed: ${new Date(Date.now() - startTime).toISOString().slice(11, -1)}ms\n`));
+    process.stdout.write(chalk.bgGray(`Time Elapsed: ${msToTime(Date.now() - startTime)}ms\n`));
     counterMap.forEach((value, key) => {
         process.stdout.write(chalk.greenBright(`Hit ${key} ${value} times.\n`));
     })
@@ -64,3 +63,8 @@ process.on('SIGINT', exitHandler.bind(null, { exit: true }));
 process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
 process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
 process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
+
+function msToTime(s) {
+    let pad = (n, z = 2) => ('00' + n).slice(-z);
+    return pad(s / 3.6e6 | 0) + ':' + pad((s % 3.6e6) / 6e4 | 0) + ':' + pad((s % 6e4) / 1000 | 0) + '.' + pad(s % 1000, 3);
+}
