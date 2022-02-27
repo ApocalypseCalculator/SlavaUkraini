@@ -50,11 +50,17 @@ function exitHandler() {
         process.stdout.cursorTo(0, i);
         process.stdout.clearLine();
     }
+    let breakdown = ``;
+    let totalhits = 0;
+    counterMap.forEach((value, key) => {
+        breakdown+=`Hit ${key} ${commas(value)} times.\n`;
+        totalhits+=value;
+    })
     process.stdout.write(chalk.bgBlue(`DDoS Report: \n`));
     process.stdout.write(chalk.bgGray(`Time Elapsed: ${msToTime(Date.now() - startTime)}ms\n`));
-    counterMap.forEach((value, key) => {
-        process.stdout.write(chalk.greenBright(`Hit ${key} ${value} times.\n`));
-    })
+    process.stdout.write(chalk.bgCyan(`Total hits: ${commas(totalhits)}\n`));
+    process.stdout.write(chalk.bgMagenta(`Hits per second: ${commas((totalhits*1000/(Date.now() - startTime)).toFixed(0))}\n`));
+    process.stdout.write(chalk.greenBright(breakdown));
     process.exit();
 }
 
@@ -67,4 +73,7 @@ process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
 function msToTime(s) {
     let pad = (n, z = 2) => ('00' + n).slice(-z);
     return pad(s / 3.6e6 | 0) + ':' + pad((s % 3.6e6) / 6e4 | 0) + ':' + pad((s % 6e4) / 1000 | 0) + '.' + pad(s % 1000, 3);
+}
+function commas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
