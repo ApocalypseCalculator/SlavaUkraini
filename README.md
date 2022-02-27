@@ -6,8 +6,14 @@ Anyways, this tool is a DDoS tool that comes with a list of Russian propaganda/g
 
 List taken from other sources. 
 
+### Prerequisites
+
+You will need: 
+- [Node.js](https://nodejs.org/en/)
 
 ### How to Use
+
+Download/clone this repository, once inside your directory using a command line, run: 
 
 ```
 node .
@@ -21,3 +27,5 @@ Example:
 ```
 node . --workers=20 --silent
 ```
+
+To exit, simply use `Ctrl+C`
