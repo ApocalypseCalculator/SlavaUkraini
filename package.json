@@ -1,6 +1,6 @@
 {
   "name": "slavaukraini",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "DDoS tool targeting Russian propaganda/government websites",
   "main": "index.js",
   "scripts": {
