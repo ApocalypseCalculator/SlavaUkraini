@@ -11,7 +11,7 @@ List taken from other sources.
 
 ```
 node .
-``
+```
 
 Optional arguments: 
 - `workers`: Number of workers to spawn. Default: 10
