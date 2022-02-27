@@ -16,7 +16,7 @@ if (argv.workers && !isNaN(argv.workers) && parseInt(argv.workers) > 0) {
 console.log(chalk.cyan('Starting workers...'));
 
 for (let i = 1; i < workerCount + 1; i++) {
-    let spawnedProcess = childProcess.spawn(argv.nodePath ?? 'node', ['attack.js'], {stdio: ['pipe', 'pipe', 'pipe', 'ipc']});
+    let spawnedProcess = childProcess.fork('attack.js', {stdio: ['pipe', 'pipe', 'pipe', 'ipc']});
     spawnedProcess.on('exit', () => {
         console.log(chalk.yellow(`Worker #${i} exited.`));
     })
